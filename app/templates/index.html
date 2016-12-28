@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div>
+    <div>
+		<p>
+			Gangle看得看不见！
+		</p>
+		{% for item in items %}
+			<button type="button" class="btn btn-default">{{item}}</button>
+		{% endfor %}
+	</div>
+</div>
+
+
+
+{% endblock %}
+
