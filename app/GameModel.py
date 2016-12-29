@@ -4,10 +4,10 @@ import random
 
 # Role = Enum('TRAP', 'RED', 'BLUE', 'NEUTRAL')
 class Role:
-    TRAP = 0
-    BLUE = 1
-    RED = 2
-    NEUTRAL = 3
+    TRAP = "trap"
+    BLUE = "blue"
+    RED = "red"
+    NEUTRAL = "neutral"
 
 class GameBoard:
     def __init__(self, n=5, m=5):

@@ -8,6 +8,18 @@ body > .container{
 	margin: 10px 10px
 }
 
-button{
+.trap{
+	border: 2px solid #000000;
+}
 
+.red{
+	border: 2px solid #FF0000;
+}
+
+.blue{
+	border: 2px solid #0000FF;
+}
+
+.neutral{
+	border: 2px solid #FFFF00;
 }

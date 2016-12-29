@@ -2,9 +2,12 @@
 from . import main
 from flask import render_template
 from ..GameModel import GameBoard
+from flask_login import current_user
 
 menu = {"home":["/homepage",u"我的主页",""],
         "join":["/join",u"加入",""]}
+
+active_games = {}
 
 @main.route('/')
 def index():
@@ -23,10 +26,18 @@ def join():
 
 @main.route('/findgame')
 def findgame():
+    if active_games.has_key(current_user.id):
+        return render_template('join.html', menu=menu, board=active_games[current_user.id])
     board = GameBoard()
     board.construct_word_set("TestText", True)
     board.construct_main_board()
+    board.construct_tiling()
+    active_games[current_user.id] = board
     return render_template('join.html', menu=menu, board=board)
+
+@main.route('/update')
+def update():
+    return "nima"
 
 def activate(name=None):
     for key in menu:

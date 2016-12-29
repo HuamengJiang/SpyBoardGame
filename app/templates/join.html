@@ -10,11 +10,15 @@
 	{% else %}
 		{% for i in range(5)%}
 			{% for j in range(5)%}
-				<button type="button" class="btn btn-default">{{ board.board[i][j].decode("utf-8") }}</button>
+				<button type="button" class="btn btn-default {{board.tiling[i][j]}}">{{ board.board[i][j].decode("utf-8") }}</button>
 			{% endfor %}
 			<br>
 		{% endfor %}
 	{% endif %}
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='join.js') }}"></script>
 {% endblock %}
