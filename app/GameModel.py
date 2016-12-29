@@ -11,27 +11,30 @@ class Role:
     NEUTRAL = "neutral"
 
 class GameBoard:
-    def __init__(self, n=5, m=5):
+    def __init__(self, filename, n=5, m=5):
         self.n = n
         self.m = m
         # necessary if a game with nonrepetitive vocabulary set is required.
-        self.word_set = Set()
         self.word_pool = Set()
         self.board = [["" for i in range(m)] for j in range(n)]
         self.tiling = [[[Role.NEUTRAL, False] for i in range(m)] for j in range(n)]
+        self.set_word_source(filename)
 
-    def construct_word_set(self, filename, unique):
-        self.word_set = Set()
+    def set_word_source(self, filename):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, filename)
         f = open(filename, 'r')
-        words = f.readlines()
-        size = len(words)
+        self.words_from_source = f.readlines()
+        f.close()
+
+    def construct_word_set(self, unique = True):
+        self.word_set = Set()
+        size = len(self.words_from_source)
         set_capacity = self.n * self.m
         while len(self.word_set) < set_capacity:
             print len(self.word_set)
             index = random.randint(0, size - 1)
-            word = words[index]
+            word = self.words_from_source[index]
             print word
             if unique:
                 if word not in self.word_pool:
@@ -117,8 +120,8 @@ class GameBoard:
             self.current_turn = Role.RED
 
 def main():
-    g = GameBoard()
-    g.construct_word_set("./data/TestText", True)
+    g = GameBoard("./data/TestText")
+    g.construct_word_set(True)
     g.construct_main_board()
     g.construct_tiling()
     for i in range(g.n):
