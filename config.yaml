@@ -3,9 +3,9 @@ handlers:
   static_path: favicon.ico
 - url: /static/footer.css
   static_path: static/footer.css
-  url: /static/main.css
+- url: /static/main.css
   static_path: static/main.css
-  url: /static/main.js
+- url: /static/main.js
   static_path: static/main.js
-  url: /static/jquery.js
+- url: /static/jquery.js
   static_path: static/jquery.js
