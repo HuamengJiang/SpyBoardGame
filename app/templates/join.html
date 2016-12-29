@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="page-header"><h1>快点开一盘</h1></div>
+<div>
+	{% if not board %}
+    <div>
+		<a href="/findgame" class="btn btn-default" role="button">快速加入</a>
+	</div>
+	{% else %}
+		{% for i in range(5)%}
+			{% for j in range(5)%}
+				<button type="button" class="btn btn-default">{{ board.board[i][j].decode("utf-8") }}</button>
+			{% endfor %}
+			<br>
+		{% endfor %}
+	{% endif %}
+</div>
+
+{% endblock %}
