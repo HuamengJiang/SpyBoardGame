@@ -1,13 +1,14 @@
 from sets import Set
 # from enum import Enum
 import random
+import os
 
 # Role = Enum('TRAP', 'RED', 'BLUE', 'NEUTRAL')
 class Role:
-    TRAP = 0
-    BLUE = 1
-    RED = 2
-    NEUTRAL = 3
+    TRAP = "trap"
+    BLUE = "blue"
+    RED = "red"
+    NEUTRAL = "neutral"
 
 class GameBoard:
     def __init__(self, n=5, m=5):
@@ -21,6 +22,8 @@ class GameBoard:
 
     def construct_word_set(self, filename, unique):
         self.word_set = Set()
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, filename)
         f = open(filename, 'r')
         words = f.readlines()
         size = len(words)
@@ -66,12 +69,12 @@ class GameBoard:
         tiling_sequence += [Role.TRAP for i in range(self.trap_tiles)]
         tiling_sequence += [Role.BLUE for i in range(self.blue_tiles)]
         tiling_sequence += [Role.RED for i in range(self.red_tiles)]
-        tiling_sequence += [Role.NEUTRAL for i in range(base_tile_count)]
+        tiling_sequence += [Role.NEUTRAL for i in range(base_tile_count - 1)]
         sequence = random.shuffle(tiling_sequence)
         board_size = self.n * self.m
         for i in range(self.n):
             for j in range(self.m):
-                self.tiling[i][j] = tiling_sequence[i * self.m + j]
+                self.tiling[i][j][0] = tiling_sequence[i * self.m + j]
 
     # We will need to do this when we have exhausted all the words in
     # our source.
@@ -115,7 +118,11 @@ class GameBoard:
 
 def main():
     g = GameBoard()
-    g.construct_word_set("TestText", True)
+    g.construct_word_set("./data/TestText", True)
+    g.construct_main_board()
+    g.construct_tiling()
+    for i in range(g.n):
+        print g.tiling[i]
 
 if __name__ == "__main__":
     main()
