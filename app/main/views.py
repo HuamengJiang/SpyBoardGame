@@ -36,13 +36,14 @@ def findgame():
         return render_template('join.html', menu=menu, 
             game=active_games[user_game_mapping[current_user.id]], 
             gameid=user_game_mapping[current_user.id])
-
+    else:
+        print user_game_mapping
     # search a game
     game_id = request.args.get('id')
     if game_id:
         if active_games.has_key(int(game_id)):
             if active_games[int(game_id)].is_open():
-                user_game_mapping[current_user.id] = int(game_id)
+                user_game_mapping[current_user.id] = long(game_id)
                 active_games[int(game_id)].add_player(current_user.id, "red")
                 return render_template('join.html', menu=menu, game=active_games[int(game_id)],gameid=int(game_id))
             else:
@@ -83,14 +84,15 @@ def clearall():
 @main.route('/quitgame')
 def quitgame():
     if active_games.has_key(current_user.id):
-        for p in active_games[current_user.id].blue_team.playeys:
+        for p in active_games[current_user.id].blue_team.players:
             user_game_mapping.pop(p)
-        for p in active_games[current_user.id].red_team.playeys:
+        for p in active_games[current_user.id].red_team.players:
             user_game_mapping.pop(p)
+        active_games[current_user.id].drop_player(current_user.id)
         active_games.pop(current_user.id)
     else:
         active_games[user_game_mapping[current_user.id]].drop_player(current_user.id)
-    user_game_mapping.pop(current_user.id)
+        user_game_mapping.pop(current_user.id)
 
     flash(u'已退出当前游戏', 'success')
     return render_template('join.html', menu=menu)
@@ -103,7 +105,10 @@ def showallgames():
 
 @main.route('/update')
 def update():
-    game = active_games[user_game_mapping[current_user.id]]
+    print user_game_mapping
+    print active_games
+    if not user_game_mapping.has_key(current_user.id):
+        return json.dumps({})
     gameid = user_game_mapping[current_user.id]
     dic = {}
     dic["players"] = []
@@ -114,7 +119,7 @@ def update():
     for p in active_games[gameid].red_team.players:
         un = User.query.get(int(p)).username
         dic["players"].append(un)
-
+    print dic["players"]
     return json.dumps(dic)
 
 def activate(name=None):

@@ -8,7 +8,10 @@ function update_status(){
 		url: "/update",
 		success: function(result){
 			var game = JSON.parse(result)
-			$("#player_list").text(game["players"].join(","));
+			// alert(game["players"]);
+			if (game["players"]){
+				$("#player_list").text(game["players"].join(","));
+			}
 		}
 	});
 }
