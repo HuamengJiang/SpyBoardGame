@@ -11,45 +11,18 @@ class Role:
     NEUTRAL = "neutral"
 
 class GameBoard:
-    def __init__(self, filename, n=5, m=5):
+    def __init__(self, n=5, m=5):
         self.n = n
         self.m = m
-        # necessary if a game with nonrepetitive vocabulary set is required.
-        self.word_pool = Set()
         self.board = [["" for i in range(m)] for j in range(n)]
         self.tiling = [[[Role.NEUTRAL, False] for i in range(m)] for j in range(n)]
-        self.set_word_source(filename)
-        
-    # todo: abstract into a separate class and use a word-set as constructor parameter
-    def set_word_source(self, filename):
-        dir = os.path.dirname(__file__)
-        filename = os.path.join(dir, filename)
-        f = open(filename, 'r')
-        self.words_from_source = f.readlines()
-        f.close()
 
-    def construct_word_set(self, unique = True):
-        self.word_set = Set()
-        size = len(self.words_from_source)
-        set_capacity = self.n * self.m
-        while len(self.word_set) < set_capacity:
-            print len(self.word_set)
-            index = random.randint(0, size - 1)
-            word = self.words_from_source[index]
-            print word
-            if unique:
-                if word not in self.word_pool:
-                    self.word_set.add(word)
-            else:
-                self.word_set.add(word)
-            self.word_pool.add(word)
-
-    def reset_board(self):
-        self.construct_main_board()
+    def reset_board(self, word_set):
+        self.construct_main_board(word_set)
         self.construct_tiling()
 
-    def construct_main_board(self):
-        word_list = list(self.word_set)
+    def construct_main_board(self, word_set):
+        word_list = list(word_set)
         for i in range(self.n):
             for j in range(self.m):
                 self.board[i][j] = word_list[i * self.m + j]
@@ -79,11 +52,6 @@ class GameBoard:
         for i in range(self.n):
             for j in range(self.m):
                 self.tiling[i][j][0] = tiling_sequence[i * self.m + j]
-
-    # We will need to do this when we have exhausted all the words in
-    # our source.
-    def reset_word_pool(self):
-        self.word_pool = Set()
 
     # when a guess is made, reveal a tile, returns if there is a turn change
     def reveal_tile(self, x, y):
@@ -120,30 +88,47 @@ class GameBoard:
         else:
             self.current_turn = Role.RED
 
+class WordSetGenerator:
+    def __init__(self, filename):
+        self.set_word_source(filename)
+        self.reset_word_pool()
+
+    def set_word_source(self, filename):
+        dir = os.path.dirname(__file__)
+        filename = os.path.join(dir, filename)
+        f = open(filename, 'r')
+        self.words = f.readlines()
+        f.close()
+        self.source_size = len(self.words)
+
+    def gen_word_set(self, set_size, unique = True):
+        word_set = Set()
+        while len(word_set) < set_size:
+            print len(word_set)
+            index = random.randint(0, self.source_size - 1)
+            word = self.words[index]
+            print word
+            if unique:
+                if word not in self.word_pool:
+                    word_set.add(word)
+            else:
+                word_set.add(word)
+            # TODO: it doesn't matter if Set is multiset, but be sure about the behavior for simple set
+            self.word_pool.add(word)
+        return word_set
+
+    # We will need to do this when we have exhausted all the words in
+    # our source.
+    def reset_word_pool(self):
+        self.word_pool = Set()
+
 def main():
-    g = GameBoard("./data/TestText")
-    g.construct_word_set(True)
-    g.construct_main_board()
+    wsg = WordSetGenerator("./data/TestText")
+    g = GameBoard()
+    g.construct_main_board(wsg.gen_word_set(g.n * g.m))
     g.construct_tiling()
     for i in range(g.n):
         print g.tiling[i]
 
 if __name__ == "__main__":
     main()
-
-# class WordSetGenerator:
-#     def __init__(self, filename, word_pool):
-#         f = open(filename, 'r')
-#         self.word_list = f.readlines()
-#         self.word_list_size = len(self.word_list)
-#         f.close()
-#         self.sorted_indices = []
-#         # TODO: check if this is passed by reference
-#         self.word_pool = word_pool
-#
-#     def generate_set(self, size, unique):
-#         word_set = Set()
-#         while len(word_set) < size:
-#             index = random.randint(0, self.word_list_size - 1)
-#             if unique:
-#
