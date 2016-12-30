@@ -11,6 +11,9 @@
     {% if gameid %}
     	<h3>游戏id{{gameid}}</h3>
     {% endif %}
+    <div>
+    	当前玩家：<p id="player_list"></p>
+    </div>
 	{% if not game %}
     <div>
     	<form action="/findgame" method="get">

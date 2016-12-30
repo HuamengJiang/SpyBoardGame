@@ -29,13 +29,13 @@ class Game:
         if color == "red":
             if len(self.red_team.players) == self.team_capacity:
                 return
-            self.red_team.players += [id]
+            self.red_team.players.append(id)
             if not self.red_team.leader:
                 self.red_team.leader = id
         elif color == "blue":
             if len(self.blue_team.players) == self.team_capacity:
                 return
-            self.blue_team.players += [id]
+            self.blue_team.players.append(id)
             if not self.blue_team.leader:
                 self.blue_team.leader = id
 
@@ -62,10 +62,11 @@ class Game:
         self.board.terminate_game()
 
     def switch_turn(self):
-    	self.board.switch_turn()
+        self.board.switch_turn()
 
 
 class Team:
-	color = ""
-	players = []
-	leader = None
+    def __init__(self):
+        self.color = ""
+        self.players = []
+        self.leader = None
