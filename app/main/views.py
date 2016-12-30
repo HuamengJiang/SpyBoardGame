@@ -29,18 +29,18 @@ def join():
 def findgame():
     if active_games.has_key(current_user.id):
         flash(u'你已经有一盘游戏在进行中', 'success')
-        return render_template('join.html', menu=menu, board=active_games[current_user.id], gameid=current_user.id)
+        return render_template('join.html', menu=menu, game=active_games[current_user.id], gameid=current_user.id)
 
     game_id = request.args.get('id')
     if game_id:
         if active_games.has_key(int(game_id)):
-            return render_template('join.html', menu=menu, board=active_games[int(game_id)],gameid=int(game_id))
+            return render_template('join.html', menu=menu, game=active_games[int(game_id)],gameid=int(game_id))
         else:
             flash(u'你寻找的游戏不存在', 'danger')
             return render_template('join.html', menu=menu)
 
     if len(active_games):
-        return render_template('join.html', menu=menu, board=active_games[active_games.keys()[0]],gameid=active_games.keys()[0])
+        return render_template('join.html', menu=menu, game=active_games[active_games.keys()[0]],gameid=active_games.keys()[0])
     else:
         flash(u'没有可以加入的游戏', 'danger')
         return render_template('join.html', menu=menu)
