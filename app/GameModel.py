@@ -19,7 +19,8 @@ class GameBoard:
         self.board = [["" for i in range(m)] for j in range(n)]
         self.tiling = [[[Role.NEUTRAL, False] for i in range(m)] for j in range(n)]
         self.set_word_source(filename)
-
+        
+    # todo: abstract into a separate class and use a word-set as constructor parameter
     def set_word_source(self, filename):
         dir = os.path.dirname(__file__)
         filename = os.path.join(dir, filename)

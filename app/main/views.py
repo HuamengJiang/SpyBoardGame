@@ -28,8 +28,8 @@ def join():
 def findgame():
     if active_games.has_key(current_user.id):
         return render_template('join.html', menu=menu, board=active_games[current_user.id])
-    board = GameBoard()
-    board.construct_word_set("TestText", True)
+    board = GameBoard(".\\data\\TestText")
+    board.construct_word_set(True)
     board.construct_main_board()
     board.construct_tiling()
     active_games[current_user.id] = board

@@ -11,7 +11,7 @@ class Game:
      def is_open(self):
      	pass
 
-     def add_player(self):
+     def add_player(self, color):
      	pass
 
      def start_game(self):
@@ -19,6 +19,9 @@ class Game:
 
      def terminate_game(self):
      	pass
+
+     def switch_turn(self):
+     	self.board.switch_turn()
 
 
 class Team:

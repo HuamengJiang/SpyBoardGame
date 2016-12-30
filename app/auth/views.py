@@ -4,6 +4,8 @@ from flask_login import login_user, login_required, logout_user
 from . import auth
 from ..models import User
 from .forms import LoginForm
+from ..main.views import active_games
+from flask_login import current_user
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -26,6 +28,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    active_games.pop(current_user.id)
     logout_user()
     # flash(u'您已退出登陆。', 'success')
     return redirect(url_for('main.index'))
