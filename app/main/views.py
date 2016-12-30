@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*- 
 from . import main
 from flask import render_template, flash, request
-from ..GameModel import GameBoard
+from ..GameModel import GameBoard, WordSetGenerator
 from flask_login import current_user
 
 menu = {"home":["/homepage",u"我的主页",""],
@@ -49,9 +49,9 @@ def startgame():
     if active_games.has_key(current_user.id):
         flash(u'你已经有一盘游戏在进行中', 'success')
         return render_template('join.html', menu=menu, board=active_games[current_user.id],gameid=current_user.id)
-    board = GameBoard("data/TestText")
-    board.construct_word_set(True)
-    board.construct_main_board()
+    wsg = WordSetGenerator("./data/TestText")
+    board = GameBoard()
+    board.construct_main_board(wsg.gen_word_set(board.n * board.m))
     board.construct_tiling()
     active_games[current_user.id] = board
     return render_template('join.html', menu=menu, board=board,gameid=current_user.id)
@@ -71,6 +71,8 @@ def quitgame():
 
 @main.route('/showallgames')
 def showallgames():
+    if len(active_games.keys()) == 0:
+        flash(u'目前还没有游戏', 'danger')
     return render_template('join.html', menu=menu, all_games=active_games.keys())
 
 @main.route('/update')

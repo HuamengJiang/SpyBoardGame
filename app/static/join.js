@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    setInterval(update_status, 5000);
+    // setInterval(update_status, 5000);
 });
 
 function update_status(){
