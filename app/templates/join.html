@@ -11,13 +11,13 @@
     {% if gameid %}
     	<h3>游戏id{{gameid}}</h3>
     {% endif %}
-	{% if not board %}
+	{% if not game %}
     <div>
     	<form action="/findgame" method="get">
     		<button class="btn btn-default" type="submit">快速加入</button>
     		游戏号：<input name="id" type="input" class="inputbox" required="true">
     	</form>
-		
+
 		<a href="/startgame" class="btn btn-default" role="button">开始新的一局</a>
 		<br>
 		<a href="/clearall" class="btn btn-default" role="button">关闭所有游戏</a>
@@ -32,7 +32,7 @@
 	{% else %}
 		{% for i in range(5)%}
 			{% for j in range(5)%}
-				<button type="button" class="btn btn-default {{board.tiling[i][j][0]}}">{{ board.board[i][j].decode("utf-8") }}</button>
+				<button type="button" class="btn btn-default {{game.board.tiling[i][j][0]}}">{{ game.board.board[i][j].decode("utf-8") }}</button>
 			{% endfor %}
 			<br>
 		{% endfor %}

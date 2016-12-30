@@ -88,6 +88,9 @@ class GameBoard:
         else:
             self.current_turn = Role.RED
 
+    def terminate_game(self):
+        self.current_turn = Role.TRAP;
+
 class WordSetGenerator:
     def __init__(self, filename):
         self.set_word_source(filename)
