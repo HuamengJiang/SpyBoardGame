@@ -3,9 +3,31 @@
 {% block main %}
 <div class="page-header"><h1>快点开一盘</h1></div>
 <div>
+	{% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="alert alert-{{ category }} alert-dismissable">
+                    {{ message }}
+                </div>
+    {% endfor %}
+    {% if gameid %}
+    	<h3>游戏id{{gameid}}</h3>
+    {% endif %}
 	{% if not board %}
     <div>
-		<a href="/findgame" class="btn btn-default" role="button">快速加入</a>
+    	<form action="/findgame" method="get">
+    		<button class="btn btn-default" type="submit">快速加入</button>
+    		游戏号：<input name="id" type="input" class="inputbox" required="true">
+    	</form>
+		
+		<a href="/startgame" class="btn btn-default" role="button">开始新的一局</a>
+		<br>
+		<a href="/clearall" class="btn btn-default" role="button">关闭所有游戏</a>
+		<br>
+		<a href="/showallgames" class="btn btn-default" role="button">显示所有游戏</a>
+		{% if all_games %}
+			{% for game in all_games %}
+				<p>{{game}}</p>
+			{% endfor %}
+		{% endif %}
 	</div>
 	{% else %}
 		{% for i in range(5)%}
@@ -14,6 +36,7 @@
 			{% endfor %}
 			<br>
 		{% endfor %}
+		<a href="/quitgame" class="btn btn-default" role="button">退出当前游戏</a>
 	{% endif %}
 </div>
 

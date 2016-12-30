@@ -28,7 +28,8 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
-    active_games.pop(current_user.id)
+    if active_games.has_key(current_user.id):
+        active_games.pop(current_user.id)
     logout_user()
     # flash(u'您已退出登陆。', 'success')
     return redirect(url_for('main.index'))

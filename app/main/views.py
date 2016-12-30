@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*- 
 from . import main
-from flask import render_template
+from flask import render_template, flash, request
 from ..GameModel import GameBoard
 from flask_login import current_user
 
@@ -27,13 +27,51 @@ def join():
 @main.route('/findgame')
 def findgame():
     if active_games.has_key(current_user.id):
-        return render_template('join.html', menu=menu, board=active_games[current_user.id])
-    board = GameBoard(".\\data\\TestText")
+        flash(u'你已经有一盘游戏在进行中', 'success')
+        return render_template('join.html', menu=menu, board=active_games[current_user.id], gameid=current_user.id)
+
+    game_id = request.args.get('id')
+    if game_id:
+        if active_games.has_key(int(game_id)):
+            return render_template('join.html', menu=menu, board=active_games[int(game_id)],gameid=int(game_id))
+        else:
+            flash(u'你寻找的游戏不存在', 'danger')
+            return render_template('join.html', menu=menu)
+
+    if len(active_games):
+        return render_template('join.html', menu=menu, board=active_games[active_games.keys()[0]],gameid=active_games.keys()[0])
+    else:
+        flash(u'没有可以加入的游戏', 'danger')
+        return render_template('join.html', menu=menu)
+
+@main.route('/startgame')
+def startgame():
+    if active_games.has_key(current_user.id):
+        flash(u'你已经有一盘游戏在进行中', 'success')
+        return render_template('join.html', menu=menu, board=active_games[current_user.id],gameid=current_user.id)
+    board = GameBoard("data/TestText")
     board.construct_word_set(True)
     board.construct_main_board()
     board.construct_tiling()
     active_games[current_user.id] = board
-    return render_template('join.html', menu=menu, board=board)
+    return render_template('join.html', menu=menu, board=board,gameid=current_user.id)
+
+@main.route('/clearall')
+def clearall():
+    active_games.clear()
+    flash(u'已关闭所有游戏', 'success')
+    return render_template('join.html', menu=menu)
+
+@main.route('/quitgame')
+def quitgame():
+    if active_games.has_key(current_user.id):
+        active_games.pop(current_user.id)
+    flash(u'已退出当前游戏', 'success')
+    return render_template('join.html', menu=menu)
+
+@main.route('/showallgames')
+def showallgames():
+    return render_template('join.html', menu=menu, all_games=active_games.keys())
 
 @main.route('/update')
 def update():

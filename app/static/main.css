@@ -23,3 +23,7 @@ body > .container{
 .neutral{
 	border: 2px solid #FFFF00;
 }
+
+.inputbox{
+	width: 100px;
+}
